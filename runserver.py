@@ -48,7 +48,7 @@ stdout_hdlr = logging.StreamHandler(sys.stdout)
 stdout_hdlr.setFormatter(formatter)
 log_filter = LogFilter(logging.WARNING)
 stdout_hdlr.addFilter(log_filter)
-stdout_hdlr.setLevel(logging.DEBUG)
+stdout_hdlr.setLevel(5)
 
 # Redirect messages equal or higher than WARNING to stderr
 stderr_hdlr = logging.StreamHandler(sys.stderr)
@@ -89,7 +89,16 @@ def install_thread_excepthook():
         except (KeyboardInterrupt, SystemExit):
             raise
         except:
-            sys.excepthook(*sys.exc_info())
+            exc_type, exc_value, exc_trace = sys.exc_info()
+
+            # Handle Flask's broken pipe when a client prematurely ends
+            # the connection.
+            if str(exc_value) == '[Errno 32] Broken pipe':
+                pass
+            else:
+                log.critical('Unhandled patched exception (%s): "%s".',
+                             exc_type, exc_value)
+                sys.excepthook(exc_type, exc_value, exc_trace)
     Thread.run = run
 
 
@@ -158,7 +167,7 @@ def can_start_scanning(args):
     api_version_error = (
         'The installed pgoapi is out of date. Please refer to ' +
         'http://rocketmap.readthedocs.io/en/develop/common-issues/' +
-        'faq.html#i-get-an-error-about-pgooapi-version'
+        'faq.html#i-get-an-error-about-pgoapi-version'
     )
 
     # Assert pgoapi >= pgoapi_version.
@@ -309,7 +318,7 @@ def main():
         t.start()
 
     # db cleaner; really only need one ever.
-    if not args.disable_clean:
+    if args.enable_clean:
         t = Thread(target=clean_db_loop, name='db-cleaner', args=(args,))
         t.daemon = True
         t.start()
@@ -458,17 +467,21 @@ def set_log_and_verbosity(log):
     logging.getLogger('pgoapi.pgoapi').setLevel(logging.WARNING)
     logging.getLogger('pgoapi.rpc_api').setLevel(logging.INFO)
     logging.getLogger('werkzeug').setLevel(logging.ERROR)
+    logging.getLogger('pogom.apiRequests').setLevel(logging.INFO)
 
     # Turn these back up if debugging.
-    if args.verbose == 2:
+    if args.verbose >= 2:
         logging.getLogger('pgoapi').setLevel(logging.DEBUG)
         logging.getLogger('pgoapi.pgoapi').setLevel(logging.DEBUG)
         logging.getLogger('requests').setLevel(logging.DEBUG)
-    elif args.verbose >= 3:
+
+    if args.verbose >= 3:
         logging.getLogger('peewee').setLevel(logging.DEBUG)
         logging.getLogger('rpc_api').setLevel(logging.DEBUG)
         logging.getLogger('pgoapi.rpc_api').setLevel(logging.DEBUG)
         logging.getLogger('werkzeug').setLevel(logging.DEBUG)
+        logging.addLevelName(5, 'TRACE')
+        logging.getLogger('pogom.apiRequests').setLevel(5)
 
     # Web access logs.
     if args.access_logs:

@@ -389,7 +389,7 @@ def get_args():
                         help=('Get all details about gyms (causes an ' +
                               'additional API hit for every gym).'),
                         action='store_true', default=False)
-    parser.add_argument('--disable-clean', help='Disable clean db loop.',
+    parser.add_argument('-DC', '--enable-clean', help='Enable DB cleaner.',
                         action='store_true', default=False)
     parser.add_argument(
         '--wh-types',
@@ -468,7 +468,7 @@ def get_args():
                         help=('Enables the use of X-FORWARDED-FOR headers ' +
                               'to identify the IP of clients connecting ' +
                               'through these trusted proxies.'))
-    parser.add_argument('--api-version', default='0.69.1',
+    parser.add_argument('--api-version', default='0.75.0',
                         help=('API version currently in use.'))
     verbose = parser.add_mutually_exclusive_group()
     verbose.add_argument('-v',
@@ -963,21 +963,6 @@ def generate_device_info(identifier):
 
     device_info['firmware_type'] = ios_pool[pick_hash % len(ios_pool)]
     return device_info
-
-
-def clear_dict_response(response):
-    del response['envelope'].platform_returns[:]
-    if 'responses' not in response:
-        return response
-    responses = [
-        'GET_HATCHED_EGGS', 'GET_INVENTORY', 'CHECK_AWARDED_BADGES',
-        'DOWNLOAD_SETTINGS', 'GET_BUDDY_WALKED', 'GET_INBOX'
-    ]
-    for item in responses:
-        if item in response['responses']:
-            del response['responses'][item]
-
-    return response
 
 
 def calc_pokemon_level(cp_multiplier):

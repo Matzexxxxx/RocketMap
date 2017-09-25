@@ -33,9 +33,9 @@ from .utils import (get_pokemon_name, get_pokemon_rarity, get_pokemon_types,
 from .transform import transform_from_wgs_to_gcj, get_new_coords
 from .customLog import printPokemon
 
-from .account import (check_login, setup_api, encounter_pokemon_request,
-                      pokestop_spinnable, spin_pokestop)
+from .account import check_login, setup_api, pokestop_spinnable, spin_pokestop
 from .proxy import get_new_proxy
+from .apiRequests import encounter
 
 log = logging.getLogger(__name__)
 
@@ -1892,17 +1892,20 @@ def parse_map(args, map_dict, step_location, db_update_queue, wh_update_queue,
 
     del map_dict['responses']['GET_MAP_OBJECTS']
 
-    # If there are no wild or nearby Pokemon . . .
+    # If there are no wild or nearby Pokemon...
     if not wild_pokemon and not nearby_pokemon:
-        # . . . and there are no gyms/pokestops then it's unusable/bad.
+        # ...and there are no gyms/pokestops then it's unusable/bad.
         if not forts:
             log.warning('Bad scan. Parsing found absolutely nothing.')
             log.info('Common causes: captchas or IP bans.')
-        else:
-            # No wild or nearby Pokemon but there are forts.  It's probably
+        elif not args.no_pokemon:
+            # When gym scanning we'll go over the speed limit
+            # and Pokémon will be invisible, but we'll still be able
+            # to scan gyms so we disable the error logging.
+            # No wild or nearby Pokemon but there are forts. It's probably
             # a speed violation.
-            log.warning('No nearby or wild Pokemon but there are visible gyms '
-                        'or pokestops. Possible speed violation.')
+            log.warning('No nearby or wild Pokemon but there are visible '
+                        'gyms or pokestops. Possible speed violation.')
 
     scan_loc = ScannedLocation.get_by_loc(step_location)
     done_already = scan_loc['done']
@@ -2422,7 +2425,7 @@ def encounter_pokemon(args, pokemon, account, api, account_sets, status,
             return False
 
         # Encounter Pokémon.
-        encounter_result = encounter_pokemon_request(
+        encounter_result = encounter(
             hlvl_api, hlvl_account, pokemon.encounter_id,
             pokemon.spawn_point_id, scan_location)
 
