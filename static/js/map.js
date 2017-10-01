@@ -113,7 +113,13 @@ function removePokemonMarker(encounterId) { // eslint-disable-line no-unused-var
         mapData.pokemons[encounterId].marker.rangeCircle.setMap(null)
         delete mapData.pokemons[encounterId].marker.rangeCircle
     }
+    if (mapData.pokemons[encounterId].marker.infoWindowIsOpen) {
+        mapData.pokemons[encounterId].marker.persist = null
+        mapData.pokemons[encounterId].marker.infoWindow.close()
+        mapData.pokemons[encounterId].marker.infoWindowIsOpen = false
+    }
     mapData.pokemons[encounterId].marker.setMap(null)
+    mapData.pokemons[encounterId].marker.setVisible(false)
     mapData.pokemons[encounterId].hidden = true
 }
 
@@ -1583,10 +1589,14 @@ function processPokemon(item) {
          !isExcludedPoke && isPokeAlive) {
         // Add marker to map and item to dict.
         if (!item.hidden) {
+            const isBounceDisabled = Store.get('isBounceDisabled')
+            const scaleByRarity = Store.get('scaleByRarity')
+            const isNotifyPkmn = isNotifyPoke(item)
+
             if (item.marker) {
-                updatePokemonMarker(item.marker, map)
+                updatePokemonMarker(item.marker, map, scaleByRarity, isNotifyPkmn)
             } else {
-                newMarker = setupPokemonMarker(item, map)
+                newMarker = setupPokemonMarker(item, map, isBounceDisabled, scaleByRarity, isNotifyPkmn)
                 customizePokemonMarker(newMarker, item)
                 item.marker = newMarker
             }
@@ -1862,7 +1872,10 @@ function redrawPokemon(pokemonList) {
         var item = pokemonList[key]
 
         if (!item.hidden) {
-            updatePokemonMarker(item, map)
+            const scaleByRarity = Store.get('scaleByRarity')
+            const isNotifyPkmn = isNotifyPoke(item)
+
+            updatePokemonMarker(item, map, scaleByRarity, isNotifyPkmn)
         }
     })
 }
@@ -1916,9 +1929,9 @@ function sendNotification(title, text, icon, lat, lon) {
     /* Push.js requests the Notification permission automatically if
      * necessary. */
     Push.create(title, notificationDetails).catch(function () {
-        /* Push.js doesn't fall back automatically if the user denies the
-         * Notifications permission. */
-        sendToastrPokemonNotification(title, text, icon, lat, lon)
+        /* Don't do anything if the user denies the Notifications
+         * permission, it means they don't want notifications. Push.js
+         * will fall back to toastr if Notifications are not supported. */
     })
 }
 

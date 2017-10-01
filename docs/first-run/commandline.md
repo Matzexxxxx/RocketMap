@@ -31,10 +31,9 @@
                     [--db-name DB_NAME] [--db-user DB_USER]
                     [--db-pass DB_PASS] [--db-host DB_HOST]
                     [--db-port DB_PORT]
-                    [--db-max_connections DB_MAX_CONNECTIONS]
                     [--db-threads DB_THREADS] [-wh WEBHOOKS] [-gi]
                     [--enable-clean]
-                    [--wh-types {pokemon,gym,raid,egg,tth,gym-info,pokestop,lure}]
+                    [--wh-types {pokemon,gym,raid,egg,tth,gym-info,pokestop,lure,captcha}]
                     [--wh-threads WH_THREADS] [-whc WH_CONCURRENCY]
                     [-whr WH_RETRIES] [-wht WH_TIMEOUT]
                     [-whbf WH_BACKOFF_FACTOR] [-whlfu WH_LFU_SIZE]
@@ -46,8 +45,8 @@
                     [-vci VERSION_CHECK_INTERVAL] [-el ENCRYPT_LIB]
                     [-odt ON_DEMAND_TIMEOUT] [--disable-blacklist]
                     [-tp TRUSTED_PROXIES] [--api-version API_VERSION]
-                    [-v | --verbosity VERBOSE] [--no-file-logs]
-                    [--log-path LOG_PATH]
+                    [--no-file-logs] [--log-path LOG_PATH] [--dump]
+                    [-v | --verbosity VERBOSE]
 
     Args that start with '--' (eg. -a) can also be set in a config file
     (/config/config.ini or
@@ -57,7 +56,7 @@
     ConfigArgParse documentation. If an arg is specified in more than one place,
     then commandline values override environment variables which override config
     file values which override defaults.
-    
+
     optional arguments:
       -h, --help            show this help message and exit [env var:
                             POGOMAP_HELP]
@@ -322,9 +321,6 @@
       --db-host DB_HOST     IP or hostname for the database. [env var:
                             POGOMAP_DB_HOST]
       --db-port DB_PORT     Port for the database. [env var: POGOMAP_DB_PORT]
-      --db-max_connections DB_MAX_CONNECTIONS
-                            Max connections (per thread) for the database. [env
-                            var: POGOMAP_DB_MAX_CONNECTIONS]
       --db-threads DB_THREADS
                             Number of db threads; increase if the db queue falls
                             behind. [env var: POGOMAP_DB_THREADS]
@@ -334,7 +330,7 @@
       -gi, --gym-info       Get all details about gyms (causes an additional API
                             hit for every gym). [env var: POGOMAP_GYM_INFO]
       -DC, --enable-clean   Enable DB cleaner. [env var: POGOMAP_ENABLE_CLEAN]
-      --wh-types {pokemon,gym,raid,egg,tth,gym-info,pokestop,lure}
+      --wh-types {pokemon,gym,raid,egg,tth,gym-info,pokestop,lure,captcha}
                             Defines the type of messages to send to webhooks. [env
                             var: POGOMAP_WH_TYPES]
       --wh-threads WH_THREADS
@@ -404,12 +400,13 @@
       --api-version API_VERSION
                             API version currently in use. [env var:
                             POGOMAP_API_VERSION]
-      -v                    Show debug messages from RocketMap and pgoapi. Can be
-                            repeated up to 3 times.
-      --verbosity VERBOSE   Show debug messages from RocketMap and pgoapi. [env
-                            var: POGOMAP_VERBOSITY]
       --no-file-logs        Disable logging to files. Does not disable --access-
                             logs. [env var: POGOMAP_NO_FILE_LOGS]
       --log-path LOG_PATH   Defines directory to save log files to. [env var:
                             POGOMAP_LOG_PATH]
-    
+      --dump                Dump censored debug info about the environment and
+                            auto-upload to hastebin.com. [env var: POGOMAP_DUMP]
+      -v                    Show debug messages from RocketMap and pgoapi. Can be
+                            repeated up to 3 times.
+      --verbosity VERBOSE   Show debug messages from RocketMap and pgoapi. [env
+                            var: POGOMAP_VERBOSITY]
