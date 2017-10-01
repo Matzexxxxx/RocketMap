@@ -1,7 +1,54 @@
 $(function () {
     'use strict'
-
-
+	/*Eigene Einstellungen########################################################################################################*/
+	//
+	Store.set('showActiveRaidsOnly', false)
+	Store.set('showOpenGymsOnly', false)
+	Store.set('showTeamGymsOnly', 0)
+	Store.set('showLastUpdatedGymsOnly', 0)
+	Store.set('showScanned', false)
+	Store.set('showRanges', false)
+	Store.set('processPokemonChunkSize', 250)
+	
+	
+	//TODO: remove
+	if(!Store.get('remember_text_perfection_notify')) {
+		Store.set('remember_text_perfection_notify', '100')
+	}
+			if(window.sendToastrPokemonNotification) {
+			window.sendToastrPokemonNotification = function(title, text, icon, lat, lon) {
+				if(!Store.get('doPush')) {
+					return
+				}
+				var notification = toastr.info(text, title, {
+					closeButton: true,
+					positionClass: 'toast-top-right',
+					preventDuplicates: false,
+					onclick: function () {
+						centerMap(lat, lon, 20)
+					},
+					showDuration: '300',
+					hideDuration: '500',
+					timeOut: '6000',
+					extendedTimeOut: '1500',
+					showEasing: 'swing',
+					hideEasing: 'linear',
+					showMethod: 'fadeIn',
+					hideMethod: 'fadeOut'
+				})
+				notification.removeClass('toast-info')
+				notification.css({
+					'padding-left': '36px',
+					'background-image': `url('./${icon}')`,
+					'background-size': '36px',
+					'background-position': 'left top',
+					'background-color': '#283747',
+					'height': '40px'
+				})
+				notification.find('.toast-title').css('font-size', 'smaller')
+			};
+		}
+	/*###########################################################################################################################*/
     /* Settings. */
 
     const scaleByRarity = false // Enable scaling by rarity. Default: true.
@@ -32,16 +79,18 @@ $(function () {
 
     // Clustering! Different zoom levels for desktop vs mobile.
     const disableClusters = false // Default: false
-    const maxClusterZoomLevel = 10 // Default: 14
-    const maxClusterZoomLevelMobile = 11 // Default: same as desktop
+    const maxClusterZoomLevel = 12 // Default: 14
+    const maxClusterZoomLevelMobile = 12 // Default: same as desktop
     const clusterZoomOnClick = false // Default: false
     const clusterZoomOnClickMobile = false // Default: same as desktop
-    const clusterGridSize = 60 // Default: 60
+    const clusterGridSize = 90 // Default: 60
     const clusterGridSizeMobile = 60 // Default: same as desktop
 
     // Process Pokémon in chunks to improve responsiveness.
-    const processPokemonChunkSize = 100 // Default: 100
-    const processPokemonIntervalMs = 100 // Default: 100ms
+    const processPokemonChunkSize = 250 // Default: 100
+    const processPokemonChunkSizeMobile = 150 // Default: 100
+    const processPokemonIntervalMs = 50 // Default: 100ms
+    const processPokemonIntervalMsMobile = 100 // Default: 100ms
 
 
     /* Feature detection. */

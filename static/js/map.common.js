@@ -934,6 +934,10 @@ var StoreOptions = {
         default: false,
         type: StoreTypes.Boolean
     },
+	'doPush': {
+		default: !isTouchDevice(),
+		type: StoreTypes.Boolean
+	},
     'playSound': {
         default: false,
         type: StoreTypes.Boolean
@@ -999,7 +1003,7 @@ var StoreOptions = {
         type: StoreTypes.String
     },
     'zoomLevel': {
-        default: 14,
+        default: 13,
         type: StoreTypes.Number
     },
     'maxClusterZoomLevel': {

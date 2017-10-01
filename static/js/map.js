@@ -119,7 +119,11 @@ function removePokemonMarker(encounterId) { // eslint-disable-line no-unused-var
         mapData.pokemons[encounterId].marker.infoWindowIsOpen = false
     }
     mapData.pokemons[encounterId].marker.setMap(null)
+<<<<<<< HEAD
+	mapData.pokemons[encounterId].marker.hidden = true
+=======
     mapData.pokemons[encounterId].marker.setVisible(false)
+>>>>>>> cfd635f5ff4285e3477494c743219c1f15510b82
     mapData.pokemons[encounterId].hidden = true
 }
 
@@ -431,6 +435,7 @@ function initSidebar() {
     $('#scanned-switch').prop('checked', Store.get('showScanned'))
     $('#spawnpoints-switch').prop('checked', Store.get('showSpawnpoints'))
     $('#ranges-switch').prop('checked', Store.get('showRanges'))
+    $('#push-switch').prop('checked', Store.get('doPush'))
     $('#sound-switch').prop('checked', Store.get('playSound'))
     $('#pokemoncries').toggle(Store.get('playSound'))
     $('#cries-switch').prop('checked', Store.get('playCries'))
@@ -2819,6 +2824,10 @@ $(function () {
         return buildSwitchChangeListener(mapData, ['pokestops'], 'showPokestops').bind(this)()
     })
 
+    $('#push-switch').change(function () {
+        Store.set('doPush', this.checked)
+    })
+	
     $('#sound-switch').change(function () {
         Store.set('playSound', this.checked)
         var options = {
