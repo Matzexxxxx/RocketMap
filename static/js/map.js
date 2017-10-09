@@ -561,8 +561,8 @@ function pokemonLabel(item) {
                 <span class='label-countdown' disappears-at='${disappearTime}'>00m00s</span> verbleibend<br> (Despawn um ${moment(disappearTime).format('HH:mm')})
               </div>
 			<div class='pokemon'>
-				IV: <span class='pokemon no-encounter'>${iv.toFixed(1)}%</span> (${atk}/${def}/${sta})<br>
-				CP: <span class='pokemon encounter'>${cp}</span>
+				IV: <span class='pokemon encounter'><font color='orange'>${iv.toFixed(1)}%</font></span> (${atk}/${def}/${sta})<br>
+				WP: <span class='pokemon encounter'>${cp}</span>
 			</div>
 			<div class='pokemon'>
                 Moveset: <span class='pokemon encounter'>${pMove1}/${pMove2}</span>
@@ -605,7 +605,7 @@ function pokemonLabel(item) {
           </div>
           <div class='pokemon'>
             IV: <span class='pokemon no-encounter'>Nicht Gescannt</span><br>
-            CP: <span class='pokemon no-encounter'>Nicht Gescannt</span>
+            WP: <span class='pokemon no-encounter'>Nicht Gescannt</span>
           </div>
           <div class='pokemon'>
             Moveset: <span class='pokemon no-encounter'>Nicht gescannt</span>
@@ -1919,12 +1919,18 @@ var updateLabelDiffTime = function () {
         var timestring = ''
 
         if (disappearsAt.ttime < disappearsAt.now) {
-            timestring = '(expired)'
+            timestring = '(verschwunden)'
         } else {
             timestring = lpad(hours, 2, 0) + ':' + lpad(minutes, 2, 0) + ':' + lpad(seconds, 2, 0)
         }
-
+		
+		//Color the shit up
+		//if(disappearsAt.tdiff >= 20){timestring.fontcolor('#00CC00')} // more than 20 minutes = green
+		//if(disappearsAt.tdiff >= 20){timestring.fontcolor('green')} // more than 20 minutes = green
+		//else if(minutes >= 5){$(element).style.color = '#FDDF29' } // more than 5 minutes = yellow
+		//else if(minutes < 5){$(element).style.color = '#FF0000' } // less than 5 minutes = red
         $(element).text(timestring)
+		//if(disappearsAt.tdiff >= 20){$(element).style.color = '#00CC00'} // more than 20 minutes = green
     })
 }
 
