@@ -108,6 +108,18 @@ function notifyAboutPokemon(id) { // eslint-disable-line no-unused-vars
     ).trigger('change')
 }
 
+function removeNotifyAboutPokemon (id) { // eslint-disable-line no-unused-vars
+	var arr = $selectPokemonNotify.val()
+	var index = arr.indexOf(id.toString())
+	if(index && index >= 0) {
+		arr.splice(index, 1)
+		
+		$selectPokemonNotify.val(
+			arr
+		).trigger('change')
+	}
+}
+
 function removePokemonMarker(encounterId) { // eslint-disable-line no-unused-vars
     if (mapData.pokemons[encounterId].marker.rangeCircle) {
         mapData.pokemons[encounterId].marker.rangeCircle.setMap(null)
@@ -537,30 +549,41 @@ function pokemonLabel(item) {
             <div class='pokemon container content-left'>
               <div>
                 <img class='pokemon sprite' src='static/icons/${id}.png'>
-                <span class='pokemon'>Level: </span><span class='pokemon'>${pokemonLevel}</span>
-                <span class='pokemon links exclude'><a href='javascript:excludePokemon(${id})'>Exclude</a></span>
-                <span class='pokemon links notify'><a href='javascript:notifyAboutPokemon(${id})'>Notify</a></span>
-                <span class='pokemon links remove'><a href='javascript:removePokemonMarker("${encounterId}")'>Remove</a></span>
+				<span class='pokemon'>Level: </span><span class='pokemon no-encounter'>n/a</span><br>
+				<div>
+					<span class='pokemon navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Mit Google Maps oeffnen'>Route</a></span>
+				</div>
               </div>
           </div>
           <div class='pokemon container content-right'>
             <div>
               <div class='pokemon disappear'>
-                <span class='label-countdown' disappears-at='${disappearTime}'>00m00s</span> left (${moment(disappearTime).format('HH:mm')})
+                <span class='label-countdown' disappears-at='${disappearTime}'>00m00s</span> verbleibend<br> (Despawn um ${moment(disappearTime).format('HH:mm')})
               </div>
-              <div class='pokemon'>
-                CP: <span class='pokemon encounter'>${cp}/${iv.toFixed(1)}%</span> (A${atk}/D${def}/S${sta})
-              </div>
-              <div class='pokemon'>
+			<div class='pokemon'>
+				IV: <span class='pokemon no-encounter'>${iv.toFixed(1)}%</span> (${atk}/${def}/${sta})<br>
+				CP: <span class='pokemon encounter'>${cp}</span>
+			</div>
+			<div class='pokemon'>
                 Moveset: <span class='pokemon encounter'>${pMove1}/${pMove2}</span>
-              </div>
-              <div class='pokemon'>
-                Weight: ${weight.toFixed(2)}kg | Height: ${height.toFixed(2)}m
-              </div>
-              <div>
-                <span class='pokemon navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Open in Google Maps'>${latitude.toFixed(6)}, ${longitude.toFixed(7)}</a></span>
-              </div>
-          </div>
+			</div>
+			<div class='pokemon'>
+                Gewicht: ${weight.toFixed(2)}kg | Größe: ${height.toFixed(2)}m
+			</div>
+			<br>
+			<b>Optionen für ${name}:<br></b>
+			<div class='pokemon'>
+				<span class='pokemon links exclude'><a href='javascript:excludePokemon(${id})'>Alle ${name} ausblenden</a></span><br>
+			<div>
+			<div class='pokemon'>
+				<span class='pokemon links remove'><a href='javascript:removePokemonMarker("${encounterId}")'>Dieses ${name} ausblenden</a></span>
+			</div>
+			<div class='pokemon'>
+				<span class='pokemon links notify'><a href='javascript:notifyAboutPokemon(${id})'>${name} als Favorit hinzufügen</a></span><br>
+			</div>
+			<div class='pokemon'>
+				<span class='pokemon links exclude'><a href='javascript:removeNotifyAboutPokemon(${id})'>${name} als Favorit entfernen</a></span>
+			</div>
         </div>
       </div>`
     } else {
@@ -568,30 +591,43 @@ function pokemonLabel(item) {
       <div class='pokemon container'>
         <div class='pokemon container content-left'>
           <div>
-            <img class='pokemon sprite' src='static/icons/${id}.png'>
-            <span class='pokemon'>Level: </span><span class='pokemon no-encounter'>n/a</span>
-            <span class='pokemon links exclude'><a href='javascript:excludePokemon(${id})'>Exclude</a></span>
-            <span class='pokemon links notify'><a href='javascript:notifyAboutPokemon(${id})'>Notify</a></span>
-            <span class='pokemon links remove'><a href='javascript:removePokemonMarker("${encounterId}")'>Remove</a></span>
+            <img class='pokemon sprite' src='static/icons/${id}.png'><br>
+            <span class='pokemon'>Level: </span><span class='pokemon no-encounter'>n/a</span><br>
+			<div>
+				<span class='pokemon navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Mit Google Maps oeffnen'>Route</a></span>
+			</div>
           </div>
       </div>
       <div class='pokemon container content-right'>
         <div>
           <div class='pokemon disappear'>
-            <span class='label-countdown' disappears-at='${disappearTime}'>00m00s</span> left (${moment(disappearTime).format('HH:mm')})
+            <span class='label-countdown' disappears-at='${disappearTime}'>00m00s</span> verbleibend<br> (Despawn um ${moment(disappearTime).format('HH:mm')})
           </div>
           <div class='pokemon'>
-            CP: <span class='pokemon no-encounter'>No information</span>
+            IV: <span class='pokemon no-encounter'>Nicht Gescannt</span><br>
+            CP: <span class='pokemon no-encounter'>Nicht Gescannt</span>
           </div>
           <div class='pokemon'>
-            Moveset: <span class='pokemon no-encounter'>No information</span>
+            Moveset: <span class='pokemon no-encounter'>Nicht gescannt</span>
           </div>
           <div class='pokemon'>
             Weight: <span class='pokemon no-encounter'>n/a</span> | Height: <span class='pokemon no-encounter'>n/a</span>
           </div>
-          <div>
-            <span class='pokemon navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Open in Google Maps'>${latitude.toFixed(6)}, ${longitude.toFixed(7)}</a></span>
-          </div>
+		  <br>
+		  <b>Optionen für ${name}:<br></b>
+		  <div class='pokemon'>
+            <span class='pokemon links exclude'><a href='javascript:excludePokemon(${id})'>Alle ${name} ausblenden</a></span><br>
+		  </div>
+		  <div class='pokemon'>
+            <span class='pokemon links remove'><a href='javascript:removePokemonMarker("${encounterId}")'>Dieses ${name} ausblenden</a></span>
+		  </div>
+		  <br>
+		  <div class='pokemon'>
+            <span class='pokemon links notify'><a href='javascript:notifyAboutPokemon(${id})'>${name} als Favorit hinzufügen</a></span><br>
+		  </div>
+		  <div class='pokemon'>
+			<span class='pokemon links exclude'><a href='javascript:removeNotifyAboutPokemon(${id})'>${name} als Favorit entfernen</a></span>
+		  </div>
       </div>
     </div>
   </div>`
