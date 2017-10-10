@@ -548,21 +548,30 @@ function pokemonLabel(item) {
           <div class='pokemon container'>
             <div class='pokemon container content-left'>
               <div>
-                <img class='pokemon sprite' src='static/icons/${id}.png'>
-				<span class='pokemon'>Level: </span><span class='pokemon no-encounter'>n/a</span><br>
+				<img class='pokemon sprite' src='static/icons/${id}.png'>
+				<span class='pokemon'>Level </span><span class='pokemon encounter'><font size='4'>${pokemonLevel}</font></span><br>
 				<div>
 					<span class='pokemon navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Mit Google Maps oeffnen'>Route</a></span>
+				</div>
+				<br>
+				<br>
+				<br>
+				<div class='pokemon'>
+					<span class='pokemon links notify'><a href='javascript:notifyAboutPokemon(${id})'>Fav.</a></span><br>
+				</div>
+				<div class='pokemon'>
+					<span class='pokemon links exclude'><a href='javascript:removeNotifyAboutPokemon(${id})'>Fav.</a></span>
 				</div>
               </div>
           </div>
           <div class='pokemon container content-right'>
             <div>
               <div class='pokemon disappear'>
-                <span class='label-countdown' disappears-at='${disappearTime}'>00m00s</span> verbleibend<br> (Despawn um ${moment(disappearTime).format('HH:mm')})
+                <span class='label-countdown' disappears-at='${disappearTime}'style='background-color: #fffaaa'>00m00s</span> übrig<br><font size='1'>  (Despawn um ${moment(disappearTime).format('HH:mm')})</font>
               </div>
 			<div class='pokemon'>
-				IV: <span class='pokemon encounter'><font color='orange'>${iv.toFixed(1)}%</font></span> (${atk}/${def}/${sta})<br>
-				WP: <span class='pokemon encounter'>${cp}</span>
+				<font size='4'>IV: <span class='pokemon encounter'><font color='orange' size='4'>${iv.toFixed(1)}%</font></font></span> (${atk}/${def}/${sta})<br>
+				<font size='4'>WP: <span class='pokemon encounter'><font size='4'>${cp}</font></font></span>
 			</div>
 			<div class='pokemon'>
                 Moveset: <span class='pokemon encounter'>${pMove1}/${pMove2}</span>
@@ -578,12 +587,6 @@ function pokemonLabel(item) {
 			<div class='pokemon'>
 				<span class='pokemon links remove'><a href='javascript:removePokemonMarker("${encounterId}")'>Dieses ${name} ausblenden</a></span>
 			</div>
-			<div class='pokemon'>
-				<span class='pokemon links notify'><a href='javascript:notifyAboutPokemon(${id})'>${name} als Favorit hinzufügen</a></span><br>
-			</div>
-			<div class='pokemon'>
-				<span class='pokemon links exclude'><a href='javascript:removeNotifyAboutPokemon(${id})'>${name} als Favorit entfernen</a></span>
-			</div>
         </div>
       </div>`
     } else {
@@ -595,23 +598,26 @@ function pokemonLabel(item) {
             <span class='pokemon'>Level: </span><span class='pokemon no-encounter'>n/a</span><br>
 			<div>
 				<span class='pokemon navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Mit Google Maps oeffnen'>Route</a></span>
+				<br>
+				<br>
+				<br>
+				<div class='pokemon'>
+					<span class='pokemon links notify'><a href='javascript:notifyAboutPokemon(${id})'>Fav.</a></span><br>
+				</div>
+				<div class='pokemon'>
+					<span class='pokemon links exclude'><a href='javascript:removeNotifyAboutPokemon(${id})'>Fav.</a></span>
+				</div>
 			</div>
           </div>
       </div>
       <div class='pokemon container content-right'>
         <div>
           <div class='pokemon disappear'>
-            <span class='label-countdown' disappears-at='${disappearTime}'>00m00s</span> verbleibend<br> (Despawn um ${moment(disappearTime).format('HH:mm')})
+            <span class='label-countdown' disappears-at='${disappearTime}'style='background-color: #fffaaa'>00m00s</span> verbleibend<br><font size='1'>  (Despawn um ${moment(disappearTime).format('HH:mm')})</font>
           </div>
           <div class='pokemon'>
-            IV: <span class='pokemon no-encounter'>Nicht Gescannt</span><br>
-            WP: <span class='pokemon no-encounter'>Nicht Gescannt</span>
-          </div>
-          <div class='pokemon'>
-            Moveset: <span class='pokemon no-encounter'>Nicht gescannt</span>
-          </div>
-          <div class='pokemon'>
-            Weight: <span class='pokemon no-encounter'>n/a</span> | Height: <span class='pokemon no-encounter'>n/a</span>
+            <font size='3'>IV: <span class='pokemon no-encounter'><font size='3' color='red'>Nicht Gescannt</font></font></span><br>
+            <font size='3'>WP: <span class='pokemon no-encounter'><font size='3' color='red'>Nicht Gescannt</font></font></span>
           </div>
 		  <br>
 		  <b>Optionen für ${name}:<br></b>
@@ -620,13 +626,6 @@ function pokemonLabel(item) {
 		  </div>
 		  <div class='pokemon'>
             <span class='pokemon links remove'><a href='javascript:removePokemonMarker("${encounterId}")'>Dieses ${name} ausblenden</a></span>
-		  </div>
-		  <br>
-		  <div class='pokemon'>
-            <span class='pokemon links notify'><a href='javascript:notifyAboutPokemon(${id})'>${name} als Favorit hinzufügen</a></span><br>
-		  </div>
-		  <div class='pokemon'>
-			<span class='pokemon links exclude'><a href='javascript:removeNotifyAboutPokemon(${id})'>${name} als Favorit entfernen</a></span>
 		  </div>
       </div>
     </div>
@@ -1924,12 +1923,14 @@ var updateLabelDiffTime = function () {
             timestring = lpad(hours, 2, 0) + ':' + lpad(minutes, 2, 0) + ':' + lpad(seconds, 2, 0)
         }
 		
+		
 		//Color the shit up
 		//if(disappearsAt.tdiff >= 20){timestring.fontcolor('#00CC00')} // more than 20 minutes = green
 		//if(disappearsAt.tdiff >= 20){timestring.fontcolor('green')} // more than 20 minutes = green
 		//else if(minutes >= 5){$(element).style.color = '#FDDF29' } // more than 5 minutes = yellow
 		//else if(minutes < 5){$(element).style.color = '#FF0000' } // less than 5 minutes = red
         $(element).text(timestring)
+		//if(minutes >= 20) {$(element).text = $(element).fontcolor("green")}
 		//if(disappearsAt.tdiff >= 20){$(element).style.color = '#00CC00'} // more than 20 minutes = green
     })
 }
