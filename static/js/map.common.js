@@ -914,6 +914,10 @@ var StoreOptions = {
         default: true,
         type: StoreTypes.Boolean
     },
+	'showGeofence': {
+		default: true,
+		type: StoreTypes.Boolean
+	},
     'showPokestops': {
         default: false,
         type: StoreTypes.Boolean
