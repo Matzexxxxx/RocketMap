@@ -1135,7 +1135,7 @@ if(window.map) {
 
     // Clustering! Different zoom levels for desktop vs mobile.
     const disableClusters = false // Default: false
-    const maxClusterZoomLevel = 11 // Default: 14
+    const maxClusterZoomLevel = 10 // Default: 14
     const maxClusterZoomLevelMobile = 11 // Default: same as desktop
     const clusterZoomOnClick = false // Default: false
     const clusterZoomOnClickMobile = false // Default: same as desktop
