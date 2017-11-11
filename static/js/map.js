@@ -74,8 +74,14 @@ const genderType = ['♂', '♀', '⚲']
 const unownForm = ['unset', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '!', '?']
 const pokemonWithImages = [
     2, 3, 5, 6, 8, 9, 11, 28, 31, 34, 38, 59, 62, 65, 68, 71, 73, 76, 82, 89, 91, 94, 103, 105, 110, 112, 123, 125, 126, 129, 131, 134,
+<<<<<<< HEAD
     135, 136, 137, 139, 143, 144, 145, 146, 150, 153, 156, 159, 243, 244, 245, 248, 249, 302
 ]
+=======
+    135, 136, 137, 139, 143, 144, 145, 146, 150, 153, 156, 159, 243, 244, 245, 248, 249, 250, 302
+]
+
+>>>>>>> e54a1347c0dd0865d28255675a215d27111d24f9
 
 /*
  text place holders:
@@ -658,7 +664,10 @@ function isGymSatisfiesRaidMinMaxFilter(raid) {
 }
 
 function gymLabel(gym, includeMembers = true) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> e54a1347c0dd0865d28255675a215d27111d24f9
     const raid = gym.raid
     var raidStr = ''
     if (raid && raid.end > Date.now()) {
