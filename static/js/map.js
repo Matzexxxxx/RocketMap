@@ -1162,7 +1162,7 @@ function updateGymMarker(item, marker) {
     } else {
         marker.setIcon({
             url: 'static/images/gym/' + gymTypes[item.team_id] + '_' + getGymLevel(item) + '.png',
-            scaledSize: new google.maps.Size(32, 32)
+            scaledSize: new google.maps.Size(36, 36)
         })
         marker.setZIndex(1)
     }
