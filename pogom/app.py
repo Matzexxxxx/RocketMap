@@ -316,6 +316,26 @@ class Pogom(Flask):
                     Pokemon.get_active_by_id(reids, swLat, swLng,
                                              neLat, neLng))
                 d['reids'] = reids
+            
+            if args.show_iv == 'smaragd':
+                pass
+            elif args.show_iv == 'gold':
+                pass
+            elif args.show_iv == 'silber':
+                for x in d['pokemons']:
+                        x.pop('cp', None)
+                        x.pop('cp_multiplier', None)
+            else:
+                for x in d['pokemons']:
+                        x.pop('individual_attack', None)
+                        x.pop('individual_defense', None)
+                        x.pop('individual_stamina', None)
+                        x.pop('move_1', None)
+                        x.pop('move_2', None)
+                        x.pop('cp', None)
+                        x.pop('cp_multiplier', None)
+                        x.pop('weight', None)
+                        x.pop('height', None)
 
         if (request.args.get('pokestops', 'true') == 'true' and
                 not args.no_pokestops):

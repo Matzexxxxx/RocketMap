@@ -1299,4 +1299,230 @@ if(window.map) {
             })
         }
     }
+	
+	if(window.pokemonLabel) {
+		var old_func = pokemonLabel;
+		
+		window.pokemonLabel = function(item) {
+			var name = item['pokemon_name']
+			var rarityDisplay = item['pokemon_rarity'] ? '(' + item['pokemon_rarity'] + ')' : ''
+			var types = item['pokemon_types']
+			var typesDisplay = ''
+			var encounterId = item['encounter_id']
+			var id = item['pokemon_id']
+			var latitude = item['latitude']
+			var longitude = item['longitude']
+			var disappearTime = item['disappear_time']
+			var atk = item['individual_attack']
+			var def = item['individual_defense']
+			var sta = item['individual_stamina']
+			var pMove1 = (moves[item['move_1']] !== undefined) ? i8ln(moves[item['move_1']]['name']) : 'gen/unknown'
+			var pMove2 = (moves[item['move_2']] !== undefined) ? i8ln(moves[item['move_2']]['name']) : 'gen/unknown'
+			var weight = item['weight']
+			var height = item['height']
+			var gender = item['gender']
+			var form = item['form']
+			var cp = item['cp']
+			var cpMultiplier = item['cp_multiplier']
+
+			$.each(types, function (index, type) {
+				typesDisplay += getTypeSpan(type)
+			})
+			
+			var details = ''
+
+			var contentstring = ''
+			var formString = ''
+			
+
+			if (id === 201 && form !== null && form > 0) {
+				formString += `(${unownForm[item['form']]})`
+			}
+
+			contentstring += `
+			<div class='pokemon name'>
+			  ${name} <span class='pokemon name pokedex'><a href='http://pokemon.gameinfo.io/en/pokemon/${id}' target='_blank' title='View in Pokédex'>#${id}</a></span> ${formString} <span class='pokemon gender rarity'>${genderType[gender - 1]} ${rarityDisplay}</span> ${typesDisplay}
+			</div>`
+
+			if (cp != null && cpMultiplier != null) {
+				var pokemonLevel = getPokemonLevel(cpMultiplier)
+
+				if (atk != null && def != null && sta != null) {
+					var iv = getIv(atk, def, sta)
+					var ivString = ''
+					if(iv < 50){
+					ivString = `<font color ='#96281B'> ${iv.toFixed(1)}</font>`
+					}
+					else if(iv >= 50 && iv < 75){
+						ivString = `<font color ='#E67E22'>${iv.toFixed(1)}</font>`
+					}
+					else if(iv >= 75 && iv < 90){
+						ivString = `<font color ='#3FC380'>${iv.toFixed(1)}</font>`
+					}
+					else if(iv >= 90 && iv < 99){
+						ivString = `<font color ='green'>${iv.toFixed(1)}</font>`
+					}
+					else{
+						ivString = `<font color ='#9A12B3' size ='5' style='background-color: #C5EFF7'>&nbsp;${iv.toFixed(1)}&nbsp;</font>`
+					}
+				}
+
+				contentstring += `
+          <div class='pokemon container'>
+            <div class='pokemon container content-left'>
+              <div>
+				<img class='pokemon sprite' src='static/icons/${id}.png'>
+				<span class='pokemon'>Level </span><span class='pokemon encounter'><font size='4'>${pokemonLevel}</font></span><br>
+				<div>
+					<span class='pokemon navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Mit Google Maps oeffnen'>Route</a></span>
+				</div>
+				<br>
+				<br>
+				<br>
+				<div class='pokemon'>
+					<span class='pokemon links notify'><a href='javascript:notifyAboutPokemon(${id})'>Fav.</a></span><br>
+				</div>
+				<div class='pokemon'>
+					<span class='pokemon links exclude'><a href='javascript:removeNotifyAboutPokemon(${id})'>Fav.</a></span>
+				</div>
+              </div>
+          </div>
+          <div class='pokemon container content-right'>
+            <div>
+              <div class='pokemon disappear'>
+                <span class='label-countdown' disappears-at='${disappearTime}'style='background-color: #fffaaa'>00m00s</span> übrig<br><font size='1'>  (Despawn um ${moment(disappearTime).format('HH:mm')})</font>
+              </div>
+			<div class='pokemon'>
+				<font size='4'>IV: <span class='pokemon encounter'><font size='4'>${ivString}%</font></font></span> (${atk}/${def}/${sta})<br>
+				<font size='4'>WP: <span class='pokemon encounter'><font size='4'>${cp}</font></font></span>
+			</div>
+			<div class='pokemon'>
+                Moveset: <span class='pokemon encounter'>${pMove1}/${pMove2}</span>
+			</div>
+			<div class='pokemon'>
+                Gewicht: ${weight.toFixed(2)}kg | Größe: ${height.toFixed(2)}m
+			</div>
+			<br>
+			<b>Optionen für ${name}:<br></b>
+			<div class='pokemon'>
+				<span class='pokemon links exclude'><a href='javascript:excludePokemon(${id})'>Alle ${name} ausblenden</a></span><br>
+			<div>
+			<div class='pokemon'>
+				<span class='pokemon links remove'><a href='javascript:removePokemonMarker("${encounterId}")'>Dieses ${name} ausblenden</a></span>
+			</div>
+        </div>
+      </div>`
+			} else if (atk != null && def != null && sta != null) {
+					var iv = getIv(atk, def, sta)
+					var ivString = ''
+					if(iv < 50){
+					ivString = `<font color ='#96281B'> ${iv.toFixed(1)}</font>`
+					}
+					else if(iv >= 50 && iv < 75){
+						ivString = `<font color ='#E67E22'>${iv.toFixed(1)}</font>`
+					}
+					else if(iv >= 75 && iv < 90){
+						ivString = `<font color ='#3FC380'>${iv.toFixed(1)}</font>`
+					}
+					else if(iv >= 90 && iv < 99){
+						ivString = `<font color ='green'>${iv.toFixed(1)}</font>`
+					}
+					else{
+						ivString = `<font color ='#9A12B3' size ='5' style='background-color: #C5EFF7'>&nbsp;${iv.toFixed(1)}&nbsp;</font>`
+					}
+
+				contentstring += `
+          <div class='pokemon container'>
+            <div class='pokemon container content-left'>
+              <div>
+				<img class='pokemon sprite' src='static/icons/${id}.png'>
+				<span class='pokemon'>Level </span><span class='pokemon no-encounter'><font size='2'>N/A</font></span><br>
+				<div>
+					<span class='pokemon navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Mit Google Maps oeffnen'>Route</a></span>
+				</div>
+				<br>
+				<br>
+				<br>
+				<div class='pokemon'>
+					<span class='pokemon links notify'><a href='javascript:notifyAboutPokemon(${id})'>Fav.</a></span><br>
+				</div>
+				<div class='pokemon'>
+					<span class='pokemon links exclude'><a href='javascript:removeNotifyAboutPokemon(${id})'>Fav.</a></span>
+				</div>
+              </div>
+          </div>
+          <div class='pokemon container content-right'>
+            <div>
+              <div class='pokemon disappear'>
+                <span class='label-countdown' disappears-at='${disappearTime}'style='background-color: #fffaaa'>00m00s</span> übrig<br><font size='1'>  (Despawn um ${moment(disappearTime).format('HH:mm')})</font>
+              </div>
+			<div class='pokemon'>
+				<font size='4'>IV: <span class='pokemon encounter'><font size='4'>${ivString}%</font></font></span> (${atk}/${def}/${sta})<br>
+				<font size='4'>WP: <span class='pokemon no-encounter'><font size='3'>Gold-Only</font></font></span>
+			</div>
+			<div class='pokemon'>
+                Moveset: <span class='pokemon encounter'>${pMove1}/${pMove2}</span>
+			</div>
+			<div class='pokemon'>
+                Gewicht: ${weight.toFixed(2)}kg | Größe: ${height.toFixed(2)}m
+			</div>
+			<br>
+			<b>Optionen für ${name}:<br></b>
+			<div class='pokemon'>
+				<span class='pokemon links exclude'><a href='javascript:excludePokemon(${id})'>Alle ${name} ausblenden</a></span><br>
+			<div>
+			<div class='pokemon'>
+				<span class='pokemon links remove'><a href='javascript:removePokemonMarker("${encounterId}")'>Dieses ${name} ausblenden</a></span>
+			</div>
+        </div>
+      </div>`
+			} else {
+			contentstring += `
+			<div class='pokemon container'>
+				<div class='pokemon container content-left'>
+					<div>
+						<img class='pokemon sprite' src='static/icons/${id}.png'><br>
+						<span class='pokemon'>Level: </span><span class='pokemon no-encounter'>n/a</span><br>
+							<div>
+								<span class='pokemon navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Mit Google Maps oeffnen'>Route</a></span>
+								<br>
+								<br>
+								<br>
+								<div class='pokemon'>
+								<span class='pokemon links notify'><a href='javascript:notifyAboutPokemon(${id})'>Fav.</a></span><br>
+								</div>
+								<div class='pokemon'>
+								<span class='pokemon links exclude'><a href='javascript:removeNotifyAboutPokemon(${id})'>Fav.</a></span>
+							</div>
+					</div>
+				</div>
+			</div>
+			<div class='pokemon container content-right'>
+				<div>
+					<div class='pokemon disappear'>
+						<span class='label-countdown' disappears-at='${disappearTime}'style='background-color: #fffaaa'>00m00s</span> verbleibend<br><font size='1'>  (Despawn um ${moment(disappearTime).format('HH:mm')})</font>
+					</div>
+					<div class='pokemon'>
+						<font size='3'>IV: <span class='pokemon no-encounter'><font size='3' color='red'>Nicht bekannt</font></font></span><br>
+						<font size='3'>WP: <span class='pokemon no-encounter'><font size='3' color='red'>Nicht bekannt</font></font></span>
+					</div>
+					<br>
+					<b>Optionen für ${name}:<br></b>
+					<div class='pokemon'>
+						<span class='pokemon links exclude'><a href='javascript:excludePokemon(${id})'>Alle ${name} ausblenden</a></span><br>
+					</div>
+					<div class='pokemon'>
+						<span class='pokemon links remove'><a href='javascript:removePokemonMarker("${encounterId}")'>Dieses ${name} ausblenden</a></span>
+					</div>
+				</div>
+			</div>
+			</div>`
+			}
+
+			contentstring += `
+			  ${details}`
+
+			return contentstring
+		};
+	}
 })
