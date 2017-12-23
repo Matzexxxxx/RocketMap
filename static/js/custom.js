@@ -43,6 +43,7 @@ if(window.map) {
     var gifhornPolygon;
     var gladbachPolygon;
     var reichenhallPolygon;
+    var heidenheimPolygon;
 	
 
     var updateGeofences = function() {
@@ -78,6 +79,7 @@ if(window.map) {
 				gifhornPolygon.setMap(null);
 				gladbachPolygon.setMap(null);
 				reichenhallPolygon.setMap(null);
+				heidenheimPolygon.setMap(null);
             }
         } else {
             if(wolfsburgPolygon == null) {
@@ -1784,6 +1786,45 @@ if(window.map) {
                         {lat: 47.7165616690863, lng:12.8776717185974},
 						{lat: 47.716677162508, lng:12.8782832619254}
 					];
+				var heidenheimCoords = [
+                        {lat: 48.702517412636, lng:10.0504302978516},
+                        {lat: 48.6991893757064, lng:10.0499582290649},
+                        {lat: 48.6961443832086, lng:10.051760673523},
+                        {lat: 48.6905496146163, lng:10.0546145439148},
+                        {lat: 48.6832471523597, lng:10.0570714473724},
+                        {lat: 48.6804455873209, lng:10.057527422905},
+                        {lat: 48.676012704342, lng:10.0581845641136},
+                        {lat: 48.6714439295643, lng:10.0593714416027},
+                        {lat: 48.6687453327917, lng:10.0617599487305},
+                        {lat: 48.6543456507625, lng:10.1573753356934},
+                        {lat: 48.6533533952044, lng:10.165057182312},
+                        {lat: 48.653452621639, lng:10.1683831214905},
+                        {lat: 48.6543810880998, lng:10.1697885990143},
+                        {lat: 48.7146894262924, lng:10.1756492257118},
+                        {lat: 48.7154849207177, lng:10.1753957569599},
+                        {lat: 48.716372426349, lng:10.1744019985199},
+                        {lat: 48.7419272850626, lng:10.1419258117676},
+                        {lat: 48.7497376432897, lng:10.1034736633301},
+                        {lat: 48.7407952483783, lng:10.0954055786133},
+                        {lat: 48.7244990553175, lng:10.1397719979286},
+                        {lat: 48.7233462775829, lng:10.1420384645462},
+                        {lat: 48.7226544213126, lng:10.1431167125702},
+                        {lat: 48.7214971775315, lng:10.1437497138977},
+                        {lat: 48.7195506829823, lng:10.143985748291},
+                        {lat: 48.6957814503066, lng:10.1428163051605},
+                        {lat: 48.6952759954909, lng:10.1426714658737},
+                        {lat: 48.6947895678949, lng:10.1422664523125},
+                        {lat: 48.6943385448419, lng:10.1416039466858},
+                        {lat: 48.6940056969752, lng:10.1409602165222},
+                        {lat: 48.6825016183467, lng:10.1100262999535},
+                        {lat: 48.6817790950443, lng:10.1079013198614},
+                        {lat: 48.681663986208, lng:10.1070933043957},
+                        {lat: 48.6818162839967, lng:10.1059707999229},
+                        {lat: 48.6823192176087, lng:10.1043051481247},
+                        {lat: 48.6984954168774, lng:10.0622320175171},
+                        {lat: 48.7013561651705, lng:10.056459903717},
+                        {lat: 48.702517412636, lng:10.0504302978516}
+					];
                 //construct the polygon.
                 wolfsburgPolygon = new google.maps.Polygon({
                     paths: wolfsburgCoords,
@@ -2017,6 +2058,14 @@ if(window.map) {
                     fillColor: '#FF0000',
                     fillOpacity: 0.05
                 });
+                heidenheimPolygon = new google.maps.Polygon({
+                    paths: heidenheimCoords,
+                    strokeColor: '#111111',
+                    strokeOpacity: 0.7,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.05
+                });
             }
             console.log('geofence > setting wolfsburgPolygons map')
             wolfsburgPolygon.setMap(map);
@@ -2048,6 +2097,7 @@ if(window.map) {
 			gifhornPolygon.setMap(map);
 			gladbachPolygon.setMap(map);
 			reichenhallPolygon.setMap(map);
+			heidenheimPolygon.setMap(map);
         }
     }
     $('#geofence-switch').change(function () {
